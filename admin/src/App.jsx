@@ -4,7 +4,7 @@ import PublicRoute from "./routes/PublicRoute";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
-import DashboardHome from "./dashboard/DashBoardHome";
+import DashboardHome from "./dashboard/DashboardHome";
 import LeadsPage from "./pages/LeadsPage";
 import CreateLead from "./dashboard/CreateLead";
 import LeadDetailsPage from "./pages/LeadDetailsPage";
