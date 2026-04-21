@@ -21,6 +21,7 @@ export const useLeadStore = create((set, get) => ({
       if (keyword) url += `&keyword=${keyword}`;
 
       const res = await fetch(url, {
+        method: "GET",
         credentials: "include",
       });
 

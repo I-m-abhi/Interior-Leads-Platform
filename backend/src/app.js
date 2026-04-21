@@ -13,7 +13,11 @@ dotenv.config({ path: "./src/config/config.env" });
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://interior-leads-platform-8vg7.vercel.app"],
+  origin: [
+    "http://localhost:5173",
+    // "https://interior-leads-platform-8vg7.vercel.app",
+    "https://admin.decowallstudio.com"
+  ],
   credentials: true,
 }));
 
@@ -21,7 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 
-app.get("/", (req, res)=> {
+app.get("/", (req, res) => {
   res.send("Welcome to the CRM API");
 })
 app.use("/api/auth", userRoutes);
