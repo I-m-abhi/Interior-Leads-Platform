@@ -139,21 +139,6 @@ export const updateProfile = handleAsyncError(async (req, res, next) => {
     name, email
   }
 
-  if (avatar !== "") {
-    const user = await User.findById(req.user.id);
-    const imageId = user.avatar.public_id;
-    await cloudinary.uploader.destroy(imageId)
-    const myCloud = await cloudinary.uploader.upload(avatar, {
-      folder: "avatars",
-      width: 150,
-      crop: 'scale'
-    })
-    updateUserDetails.avatar = {
-      public_id: myCloud.public_id,
-      url: myCloud.secure_url
-    }
-  }
-
   const user = await User.findByIdAndUpdate(req.user.id, updateUserDetails, {
     new: true,
     runValidators: true,

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import * as SecureStore from "expo-secure-store";
+import { apiRequest } from "../utils/api";
 
 export const useLeadStore = create((set, get) => ({
   isLoading: false,
@@ -9,27 +9,26 @@ export const useLeadStore = create((set, get) => ({
   page: 1,
   hasMore: true,
 
+  // 🔥 Helper to build query
+  buildQuery: (page, filter) => {
+    let query = `/api/leads?page=${page}`;
+    if (filter !== "all") query += `&status=${filter}`;
+    return query;
+  },
+
+  // ✅ Fetch Initial Leads
   fetchLeads: async (filter = "all") => {
-    set({ isLoading: true, filter, page: 1, hasMore: true });
+    set({
+      isLoading: true,
+      filter,
+      page: 1,
+      hasMore: true,
+    });
 
     try {
-      const token = await SecureStore.getItemAsync("token");
+      const endpoint = get().buildQuery(1, filter);
 
-      let url = `https://interior-leads-platform.onrender.com/api/leads?page=1`;
-
-      if (filter !== "all") {
-        url += `&status=${filter}`;
-      }
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.message);
+      const data = await apiRequest(endpoint);
 
       set({
         leads: data.leads,
@@ -46,36 +45,22 @@ export const useLeadStore = create((set, get) => ({
     }
   },
 
+  // ✅ Pagination (Load More)
   fetchMoreLeads: async () => {
-    const { page, hasMore, isFetchingMore, filter } = get();
+    const { page, hasMore, isFetchingMore, filter, buildQuery } = get();
 
     if (!hasMore || isFetchingMore) return;
 
     set({ isFetchingMore: true });
 
     try {
-      const token = await SecureStore.getItemAsync("token");
-
       const nextPage = page + 1;
+      const endpoint = buildQuery(nextPage, filter);
 
-      let url = `https://interior-leads-platform.onrender.com/api/leads?page=${nextPage}`;
-
-      if (filter !== "all") {
-        url += `&status=${filter}`;
-      }
-
-      const response = await fetch(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) throw new Error(data.message);
+      const data = await apiRequest(endpoint);
 
       set((state) => ({
-        leads: [...state.leads, ...data.leads], // 🔥 append
+        leads: [...state.leads, ...data.leads], // append
         page: nextPage,
         hasMore: data.currentPage < data.totalPages,
         isFetchingMore: false,
@@ -85,5 +70,15 @@ export const useLeadStore = create((set, get) => ({
       console.log("Fetch more error:", error);
       set({ isFetchingMore: false });
     }
+  },
+
+  // ✅ Reset (useful on logout)
+  resetLeads: () => {
+    set({
+      leads: [],
+      page: 1,
+      hasMore: true,
+      filter: "all",
+    });
   },
 }));

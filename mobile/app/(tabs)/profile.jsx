@@ -8,7 +8,7 @@ import { useRouter } from "expo-router";
 
 export default function Profile() {
   const router = useRouter();
-  const { logout } = useAuthStore();
+  const { user, logout } = useAuthStore();
 
   return (
     <View style={styles.container}>
@@ -20,17 +20,17 @@ export default function Profile() {
 
         <View style={styles.row}>
           <Ionicons name="person-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>Prem Ranjan</Text>
+          <Text style={styles.text}>{user?.name}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>+91 8271197098</Text>
+          <Text style={styles.text}>+91 {user.phone}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="mail-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>prem.ranjan@example.com</Text>
+          <Text style={styles.text}>{user.email}</Text>
         </View>
       </View>
 
@@ -40,17 +40,17 @@ export default function Profile() {
 
         <View style={styles.row}>
           <Ionicons name="business-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>Python Decor & Associates</Text>
+          <Text style={styles.text}>{user.companyDetails?.companyName}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="location-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>Noida</Text>
+          <Text style={styles.text}>{user.companyDetails?.city}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="map-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>Delhi - NCR</Text>
+          <Text style={styles.text}>{user.companyDetails?.address}</Text>
         </View>
       </View>
 

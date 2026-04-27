@@ -12,14 +12,34 @@ dotenv.config({ path: "./src/config/config.env" });
 
 const app = express();
 
+const allowedOrigins = [
+  "https://admin.decowallstudio.com",
+  "https://decowallstudio.com",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    // "https://interior-leads-platform-8vg7.vercel.app",
-    "https://admin.decowallstudio.com"
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS blocked"));
+    }
+  },
   credentials: true,
 }));
+
+app.options("*", cors());
+
+// app.use(cors({
+//   origin: [
+//     "https://admin.decowallstudio.com",
+//     "https://decowallstudio.com"
+//   ],
+//   credentials: true,
+// }));
 
 app.use(express.json());
 app.use(cookieParser());
