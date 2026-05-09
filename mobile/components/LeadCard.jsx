@@ -53,22 +53,23 @@ export default function LeadCard({ lead }) {
       //   throw new Error(data?.message || "Order creation failed");
       // }
 
-      // const options = {
-      //   description: "Lead Purchase",
-      //   currency: "INR",
-      //   key: "rzp_test_SZaERGx2a7nYsr",
-      //   amount: data.order.amount,
-      //   order_id: data.order.id,
-      //   name: "Easy Interior",
-      //   prefill: {
-      //     email: user?.email,
-      //     contact: user?.phone,
-      //     name: user?.name,
-      //   },
-      //   theme: { color: COLORS.primary },
-      // };
+      const options = {
+        description: "Lead Purchase",
+        currency: "INR",
+        key: "rzp_test_SZaERGx2a7nYsr",
+        amount: data.order.amount,
+        order_id: data.order.id,
+        name: "Easy Interior",
+        prefill: {
+          email: user?.email,
+          contact: user?.phone,
+          name: user?.name,
+        },
+        theme: { color: COLORS.primary },
+      };
 
-      // const paymentData = await RazorpayCheckout.open(options);
+      const paymentData = await RazorpayCheckout.open(options);
+      console.log(paymentData)
 
       // ✅ verify payment
       // const verifyRes = await fetch("https://api.decowallstudio.com/api/payments/verify-payment", {
