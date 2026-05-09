@@ -4,8 +4,18 @@ import handleAsyncError from "./handleAsyncError.js";
 import jwt from "jsonwebtoken";
 
 export const authenticateUser = handleAsyncError(async (req, res, next) => {
-  const {token} = req.cookies;
-  if(!token) {
+  let token;
+  if (req.cookies?.token) {
+    token = req.cookies.token;
+  }
+
+  if (!token && req.headers.authorization) {
+    if (req.headers.authorization.startsWith("Bearer")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+  }
+
+  if (!token) {
     return next(new HandleError("Unauthorized access! Please login to access this resource", 401));
   }
 

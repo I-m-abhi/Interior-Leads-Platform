@@ -1,5 +1,6 @@
 import app from "./app.js";
 import connectMongoDB from "./config/db.js";
+import Razorpay from 'razorpay';
 
 // Handle uncaught exceptions errors
 process.on("uncaughtException", (err) => {
@@ -9,6 +10,13 @@ process.on("uncaughtException", (err) => {
 });
 
 const PORT = process.env.PORT || 4000;
+export const instance = new Razorpay({
+  key_id: process.env.RAZORPAY_KEY_ID,
+  key_secret: process.env.RAZORPAY_KEY_SECRET,
+  // headers: {
+  //   "X-Razorpay-Account": "<merchant_account_id>"
+  // }
+});
 
 const server = app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

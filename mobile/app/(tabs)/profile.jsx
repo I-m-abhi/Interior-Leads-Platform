@@ -25,12 +25,12 @@ export default function Profile() {
 
         <View style={styles.row}>
           <Ionicons name="call-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>+91 {user.phone}</Text>
+          <Text style={styles.text}>+91 {user?.phone}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="mail-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>{user.email}</Text>
+          <Text style={styles.text}>{user?.email}</Text>
         </View>
       </View>
 
@@ -40,17 +40,17 @@ export default function Profile() {
 
         <View style={styles.row}>
           <Ionicons name="business-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>{user.companyDetails?.companyName}</Text>
+          <Text style={styles.text}>{user?.companyDetails?.companyName}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="location-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>{user.companyDetails?.city}</Text>
+          <Text style={styles.text}>{user?.companyDetails?.city}</Text>
         </View>
 
         <View style={styles.row}>
           <Ionicons name="map-outline" size={18} color="#2e5a2e" />
-          <Text style={styles.text}>{user.companyDetails?.address}</Text>
+          <Text style={styles.text}>{user?.companyDetails?.address}</Text>
         </View>
       </View>
 

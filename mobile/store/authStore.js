@@ -17,6 +17,7 @@ export const useAuthStore = create((set) => ({
       ]);
 
       if (token && user) {
+        console.log("Auth check successful:", { token, user: JSON.parse(user) });
         set({ token, user: JSON.parse(user) });
       }
     } catch (error) {

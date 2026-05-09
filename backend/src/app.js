@@ -6,6 +6,8 @@ import job from './config/cron.js';
 import errorHandleMiddleware from "./middleware/error.js";
 import userRoutes from "./routes/user.route.js";
 import leadRoutes from "./routes/lead.route.js";
+import orderRoutes from "./routes/order.route.js";
+import paymentRoutes from "./routes/payment.route.js";
 
 job.start();
 dotenv.config({ path: "./src/config/config.env" });
@@ -50,6 +52,8 @@ app.get("/", (req, res) => {
 })
 app.use("/api/auth", userRoutes);
 app.use("/api", leadRoutes);
+app.use("/api", orderRoutes);
+app.use("/api", paymentRoutes);
 
 //Error Handling Middleware
 app.use(errorHandleMiddleware);

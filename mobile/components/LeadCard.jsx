@@ -19,11 +19,8 @@ export default function LeadCard({ lead }) {
   );
 
   const isSold = isSoldOut || isBoughtByMe;
-  console.log("LeadCard Rendered", lead._id, "Sold:", isSold);
-  console.log("Buyers:", lead.buyers);
-  console.log("lead.maxBuyers", lead.maxBuyers)
 
-  const handleBuy = async (leadId) => {
+  const handleBuy = async (leadPrice) => {
     if (loading) return;
 
     try {
@@ -31,55 +28,76 @@ export default function LeadCard({ lead }) {
 
       const token = await SecureStore.getItemAsync("token");
 
-      const res = await fetch("https://backend-dyvm.onrender.com/api/payments/create-order", {
+      const { data: keyData } = await fetch("https://api.decowallstudio.com/api/getKey", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { key } = keyData;
+
+      const { data: orderData } = await fetch("https://api.decowallstudio.com/api/payment/process", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount: 499 })
+        amount: leadPrice * 1000
       });
 
-      const data = await res.json();
+      // const data = await res.json();
+      console.log(key, orderData)
 
-      if (!res.ok) {
-        throw new Error(data?.message || "Order creation failed");
-      }
+      // if (!res.ok) {
+      //   throw new Error(data?.message || "Order creation failed");
+      // }
 
-      const options = {
-        description: "Lead Purchase",
-        currency: "INR",
-        key: "rzp_test_SZaERGx2a7nYsr",
-        amount: data.order.amount,
-        order_id: data.order.id,
-        name: "Easy Interior",
-        prefill: {
-          email: user?.email,
-          contact: user?.phoneNumber,
-          name: user?.name,
-        },
-        theme: { color: COLORS.primary },
-      };
+      // const options = {
+      //   description: "Lead Purchase",
+      //   currency: "INR",
+      //   key: "rzp_test_SZaERGx2a7nYsr",
+      //   amount: data.order.amount,
+      //   order_id: data.order.id,
+      //   name: "Easy Interior",
+      //   prefill: {
+      //     email: user?.email,
+      //     contact: user?.phone,
+      //     name: user?.name,
+      //   },
+      //   theme: { color: COLORS.primary },
+      // };
 
-      const paymentData = await RazorpayCheckout.open(options);
+      // const paymentData = await RazorpayCheckout.open(options);
 
-      await fetch("https://backend-dyvm.onrender.com/api/payments/verify-payment", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          ...paymentData,
-          leadId,
-        }),
-      });
+      // ✅ verify payment
+      // const verifyRes = await fetch("https://api.decowallstudio.com/api/payments/verify-payment", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      //   body: JSON.stringify({
+      //     ...paymentData,
+      //     leadId,
+      //   }),
+      // });
 
-      alert("Lead purchased successfully 🎉");
+      // const verifyData = await verifyRes.json();
+
+      // if (!verifyRes.ok) {
+      //   throw new Error(verifyData.message || "Verification failed");
+      // }
+
+      // alert("Lead purchased successfully 🎉");
 
     } catch (error) {
-      console.log(error);
-      alert(error.message || "Payment failed");
+      if (error.code === "PAYMENT_CANCELLED") {
+        alert("Payment cancelled");
+      } else {
+        console.log(error);
+        alert(error.message || "Payment failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -113,7 +131,7 @@ export default function LeadCard({ lead }) {
       {/* Buy Button */}
       <TouchableOpacity
         disabled={isSold || loading}
-        onPress={() => handleBuy(lead._id)}
+        onPress={() => handleBuy("2")}
         style={[
           styles.btn,
           { backgroundColor: isSold ? "gray" : COLORS.primary }

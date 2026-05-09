@@ -62,12 +62,13 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
 
-    role: {
+   role: {
       type: String,
+      enum: ["user", "admin"],
       default: "user",
     },
 
-    noOfLead: {
+    leadCredits: {
       type: Number,
       default: 0,
     },
@@ -88,8 +89,14 @@ const userSchema = new mongoose.Schema(
       default: false,
     },
 
-    resetPasswordToken: String,
-    resetPasswordExpire: Date,
+    resetPasswordToken: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpire: {
+      type: Date,
+      select: false,
+    },
   },
   { timestamps: true }
 );
